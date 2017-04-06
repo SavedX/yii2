@@ -30,7 +30,7 @@ class Areas extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['name', 'img', 'description'], 'required'],
+            [['name', 'image', 'description'], 'required'],
             [['description'], 'string'],
             [['name'], 'string', 'max' => 255],
             [['img'], 'file', 'skipOnEmpty' => true,'extensions' => 'png, jpg, jpeg'],

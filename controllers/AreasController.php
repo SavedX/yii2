@@ -119,14 +119,13 @@ class AreasController extends Controller
     {
         $model = new Areas();
         if ($model->load(Yii::$app->request->post())) {
+
             $model->image  = UploadedFile::getInstance($model, 'image');
             if ($model->upload()) {
                 $model->img = 'areas/' . $model->image->baseName . '.' . $model->image->extension;
 
                 if ($model->save(false)) {
                     return $this->redirect(['view', 'id' => $model->id]);
-                } else {
-                    print_r($model->getErrors());
                 }
             }
         } else {
@@ -147,15 +146,13 @@ class AreasController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post())) {
-            $model->image  = UploadedFile::getInstance($model, 'image');
 
+            $model->image = UploadedFile::getInstance($model, 'image');
             if ($model->upload()) {
                 $model->img = 'areas/' . $model->image->baseName . '.' . $model->image->extension;
 
                 if ($model->save(false)) {
                     return $this->redirect(['view', 'id' => $model->id]);
-                } else {
-                    print_r($model->getErrors());
                 }
             }
         } else {

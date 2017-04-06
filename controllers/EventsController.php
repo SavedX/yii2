@@ -115,16 +115,20 @@ class EventsController extends Controller
 
         if ($model->load(Yii::$app->request->post()) && $modelShow->load(Yii::$app->request->post())) {
 
-            $modelShow->image  = UploadedFile::getInstance($modelShow, 'image');
+            $modelShow->image = UploadedFile::getInstance($modelShow, 'image');
 
             if ($modelShow->upload()) {
                 $modelShow->img = 'shows/' . $modelShow->image->baseName . '.' . $modelShow->image->extension;
             }
-            if ($modelShow->save(false)) {
+
+            $transaction = Yii::$app->db->beginTransaction();
+            try {
+                $modelShow->save(false);
                 $model->show_id = $modelShow->id;
-
                 $model->save();
-
+                $transaction->commit();
+            }  catch(\Throwable $e) {
+                $transaction->rollBack();
             }
 
             return $this->redirect(['view', 'id' => $model->id]);
@@ -145,17 +149,24 @@ class EventsController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-        $modelShow = Shows::findOne($id);
+        $modelShow = Shows::findOne($model->show_id);
 
         if ($model->load(Yii::$app->request->post()) && $modelShow->load(Yii::$app->request->post())) {
-
             $modelShow->image = UploadedFile::getInstance($modelShow, 'image');
 
             if ($modelShow->upload()) {
                 $modelShow->img = 'shows/' . $modelShow->image->baseName . '.' . $modelShow->image->extension;
-                if ($modelShow->save(false)) {
+
+                $transaction = Yii::$app->db->beginTransaction();
+                try {
+                    $modelShow->save(false);
                     $model->save();
+                    $transaction->commit();
+                }  catch(\Throwable $e) {
+                    $transaction->rollBack();
                 }
+
+
             }
 
             return $this->redirect(['view', 'id' => $model->id]);

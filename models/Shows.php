@@ -30,7 +30,7 @@ class Shows extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['name', 'img', 'description'], 'required'],
+            [['name', 'image', 'description'], 'required'],
             [['description'], 'string'],
             [['name', 'img'], 'string', 'max' => 255],
             [['img'], 'file', 'skipOnEmpty' => true,'extensions' => 'png, jpg, jpeg'],
@@ -57,8 +57,7 @@ class Shows extends \yii\db\ActiveRecord
 
     public function upload()
     {
-
-        if ($this->validate()) {
+        if ($this->validate(['image'])) {
 
             $fileName = $this->image->baseName . '.' . $this->image->extension;
             $this->image->saveAs('uploads/shows/' . $fileName);
